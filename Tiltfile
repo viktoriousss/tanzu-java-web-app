@@ -1,4 +1,4 @@
-SOURCE_IMAGE = os.getenv("SOURCE_IMAGE", default='viktorioustap.azurecr.io/apps/tanzu-java-web-app-source')
+SOURCE_IMAGE = os.getenv("SOURCE_IMAGE", default='.')
 LOCAL_PATH = os.getenv("LOCAL_PATH", default='.')
 NAMESPACE = os.getenv("NAMESPACE", default='default')
 OUTPUT_TO_NULL_COMMAND = os.getenv("OUTPUT_TO_NULL_COMMAND", default=' > /dev/null ')
@@ -6,7 +6,7 @@ OUTPUT_TO_NULL_COMMAND = os.getenv("OUTPUT_TO_NULL_COMMAND", default=' > /dev/nu
 k8s_custom_deploy(
     'tanzu-java-web-app',
     apply_cmd="tanzu apps workload apply -f config/workload.yaml --debug --live-update" +
-               " --local-path " + LOCAL_PATH +
+               " --local-path '" + LOCAL_PATH + "'" +
                " --source-image " + SOURCE_IMAGE +
                " --namespace " + NAMESPACE +
                " --yes " +
@@ -22,3 +22,5 @@ k8s_custom_deploy(
 
 k8s_resource('tanzu-java-web-app', port_forwards=["8080:8080"],
             extra_pod_selectors=[{'serving.knative.dev/service': 'tanzu-java-web-app'}])
+
+allow_k8s_contexts('tkg01')
